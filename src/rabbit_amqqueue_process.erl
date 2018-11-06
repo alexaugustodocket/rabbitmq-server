@@ -1453,6 +1453,13 @@ handle_cast({credit, ChPid, CTag, Credit, Drain},
                                      run_message_queue(true, State1)
       end);
 
+handle_cast({force_event_refresh, _}, State) ->
+    %% This message was sent by the management API up-to and including
+    %% RabbitMQ 3.7.x. The calls were entirely removed in 3.8.x. We keep
+    %% it here as a no-op to support in-place upgrades to 3.8.x (i.e.
+    %% mixed-version clusters).
+    noreply(State);
+
 handle_cast(notify_decorators, State) ->
     notify_decorators(State),
     noreply(State);
